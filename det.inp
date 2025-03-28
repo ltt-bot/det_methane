@@ -1,21 +1,22 @@
 # ------------------  INPUTS TO MAIN PROGRAM  -------------------
-stop_time = 0.00075       # simulation time (seconds)
+stop_time = 0.0015       # simulation time (seconds)
 # max_step = -1         # number of coarse steps after which to stop
-max_wall_time = 12       # wall clock time (hours)
+max_wall_time = 4.9       # wall clock time (hours)
+amr.restart = ../../../../../../scratch/gpfs/MUELLER/ltt/Methane/No_amr/chk/chk_noamr06065
 
 # PROBLEM SIZE & GEOMETRY
 geometry.is_periodic = 1 0 0  # For each dir, 0: non-periodic, 1: periodic
 geometry.coord_sys   = 0  # 0 => cart, 1 => RZ  2=>spherical
-geometry.prob_lo     =  0.0      0.0     -2.5
-geometry.prob_hi     =  15.  5.   2.5
+geometry.prob_lo     =  0.0      0.0     0.0
+geometry.prob_hi     =  15.  5.   0.8
 #amr.n_cell           =  512 128 128
 #amr.n_cell           =  256 64 64
 #amr.n_cell           =  128 32 32
 #amr.n_cell          =  256 64 32
 #amr.n_cell          =  512 128 64
 #amr.n_cell          =  1024 32 32
-amr.n_cell           =  600 200 200
-#amr.n_cell           = 300 100 100
+#amr.n_cell           =  600 200 32
+amr.n_cell           = 450 150 24
 amr.blocking_factor  =  2
 
 # >>>>>>>>>>>>>  BC KEYWORDS <<<<<<<<<<<<<<<<<<<<<<
@@ -32,7 +33,10 @@ pelec.diffuse_spec = 1
 pelec.diffuse_enth = 1
 pelec.do_react = 1
 pelec.do_mol = 1
-pelec.ppm_type = 2
+#pelec.ppm_type = 2
+pelec.ppm_type = 1
+pelec.use_hybrid_weno = true 
+pelec.weno_scheme = 1
 pelec.chem_integrator="ReactorCvode"
 cvode.solve_type = "GMRES"
 
@@ -50,29 +54,22 @@ amr.v                = 1       # verbosity in Amr.cpp
 #amr.grid_log        = grdlog  # name of grid logging file
 
 # REFINEMENT / REGRIDDING
-#amr.max_level       = 2       # maximum level number allowed
-#amr.ref_ratio       = 2 2 2 2 # refinement ratio
-#amr.regrid_int      = 10       # how often to regrid
-#amr.blocking_factor = 8       # block factor in grid generation
-#amr.max_grid_size   = 8
-#amr.n_error_buf     = 2 2 2 2 # number of buffer cells in error est
-
-amr.max_level       = 0       # maximum level number allowed
-#amr.ref_ratio       = 2 2 2 2 # refinement ratio
-#amr.regrid_int      = 2   # how often to regrid
-#amr.blocking_factor = 8       # block factor in grid generation
-#amr.max_grid_size   = 32
+amr.max_level       = 1       # maximum level number allowed
+amr.ref_ratio       = 2 2 2 2 # refinement ratio
+amr.regrid_int      = 2       # how often to regrid
+amr.blocking_factor = 2       # block factor in grid generation
+amr.max_grid_size   = 16
 #amr.n_error_buf     = 2 2 2 2 # number of buffer cells in error est
 
 # CHECKPOINT FILES
-amr.checkpoint_files_output = 0
-amr.check_file      = ../../../../../scratch/gpfs/MUELLER/ltt/Methane/No_amr/chk/chk_noamr      # root name of checkpoint file
+amr.checkpoint_files_output = 1
+amr.check_file      = ../../../../../../scratch/gpfs/MUELLER/ltt/Methane/amr_1/chk/chk_noamr     # root name of checkpoint file
 amr.check_int       = 5000        # number of timesteps between checkpoints
 
 # PLOTFILES
 amr.plot_files_output = 1
-amr.plot_file       = ../../../../../scratch/gpfs/MUELLER/ltt/Methane/No_amr/plt/plt_noamr     # root name of plotfile
-amr.plot_int        = 500        # number of timesteps between plotfiles
+amr.plot_file       = ../../../../../../scratch/gpfs/MUELLER/ltt/Methane/amr_1/plt/plt_noamr     # root name of plotfile
+amr.plot_int        = 1500        # number of timesteps between plotfiles
 amr.plot_vars  =  density Temp
 amr.derive_plot_vars = x_velocity y_velocity z_velocity magvel magvort pressure eint
 pelec.plot_rhoy = 0
@@ -91,6 +88,15 @@ prob.equiv_ratio = 1.0
 
 #tagging.tempgrad = 1
 #tagging.max_temprad_lev = 3
+
+tagging.dengrad = 1e-2         # gradient of density value
+tagging.max_velgrad_lev = 3    # maximum level at which to use density for tagging
+
+tagging.pressgrad = 1.0e4;    # gradient of pressure value
+tagging.max_pressgrad_lev = 3    # maximum level at which to use density for tagging
+
+tagging.tempgrad = 1300
+tagging.max_temprad_lev = 3
 
 #amrex.signal_handling=0
 #amr.fpe_trap_overflow = TRUE

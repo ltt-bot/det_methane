@@ -153,7 +153,7 @@ pc_initdata(
         }
         amrex::Real extra_for_sum_species_check = 1.0 - sum;
         massfrac[O2_ID] = massfrac[O2_ID] + extra_for_sum_species_check;
-        velocity[0] = 2836.19e2; // before 2327.5e2 (units in cm/s?) might need to change this
+        velocity[0] = 1800.1e2; // before 2327.5e2 (units in cm/s?) might need to change this
         temperature = 2500;
         pressure = 4.053e7; // multiply by ten if in Pa (units?)
         eos.PYT2R(pressure, massfrac, temperature, rho);
